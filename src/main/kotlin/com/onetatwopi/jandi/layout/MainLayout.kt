@@ -1,4 +1,4 @@
-package com.onetatwopi.jandi
+package com.onetatwopi.jandi.layout
 
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
@@ -12,7 +12,7 @@ import javax.swing.BorderFactory
 import javax.swing.JPanel
 
 
-class BasicForm: ToolWindowFactory, DumbAware {
+class MainLayout: ToolWindowFactory, DumbAware {
 
     override fun createToolWindowContent(p0: Project, p1: ToolWindow) {
         p1.setAnchor(ToolWindowAnchor.BOTTOM) {

@@ -1,0 +1,30 @@
+= Jandi
+잔디는 IntelliJ에서 쉽게 깃허브 PR(Pull Requests)를 생성할 수 있게 도와주는 플러그인 입니다.
+별도의 브라우저에서 Github 페이지를 띄워두지 않고 IntelliJ 내에서 PR 생성을 도와줍니다.
+
+== 설치
+https://plugins.jetbrains.com/
+
+== 연락처
+* graceful-martin(sangwoo98.kang@gmail.com)
+* HeoJaeMin(rfvgbn21@naver.com)
+* bae-st(creative.apme@gmail.com)
+* sejunO(friendlyoh@gmail.com)
+* jwp345(jwp135@naver.com)
+
+== 라이선스
+
+
+Jandi is a plugin that helps easily create GitHub Pull Requests (PR) in IntelliJ.
+It assists in creating GitHub Pull Requests (PR) within IntelliJ without the need for a separate browser window open for the GitHub page.
+
+== Installation
+
+== Contact
+* graceful-martin(sangwoo98.kang@gmail.com)
+* HeoJaeMin(rfvgbn21@naver.com)
+* bae-st(creative.apme@gmail.com)
+* sejunO(friendlyoh@gmail.com)
+* jwp345(jwp135@naver.com)
+
+== License

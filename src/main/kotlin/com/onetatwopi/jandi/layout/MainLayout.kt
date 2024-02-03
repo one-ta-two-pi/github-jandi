@@ -6,21 +6,26 @@ import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowAnchor
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.platform.PlatformProjectOpenProcessor.Companion.isNewProject
-import com.intellij.ui.content.ContentFactory
-import com.onetatwopi.jandi.layout.panel.PanelGenerator
+import com.onetatwopi.jandi.layout.panel.ContentPanel
+import com.onetatwopi.jandi.layout.panel.TabbedPanel
 
 class MainLayout : ToolWindowFactory, DumbAware {
 
-    override fun createToolWindowContent(p0: Project, p1: ToolWindow) {
-        p1.setAnchor(ToolWindowAnchor.LEFT) {
-            p0.isNewProject()
+    override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+        toolWindow.setAnchor(ToolWindowAnchor.LEFT) {
+            project.isNewProject()
         }
 
-        val panelGenerator = PanelGenerator()
+        val tabbedPanel = TabbedPanel()
 
-        val contentPanel = panelGenerator.generatePanel()
+        val pullRequestPanel = ContentPanel("Pull Request")
+        val issuePanel = ContentPanel("Issue")
 
-        val content = ContentFactory.getInstance().createContent(contentPanel, "", false)
-        p1.contentManager.addContent(content)
+        tabbedPanel.addTab(pullRequestPanel)
+        tabbedPanel.addTab(issuePanel)
+
+        val contentManager = toolWindow.contentManager
+        val content = contentManager.factory.createContent(tabbedPanel.getPanel(), "", false)
+        contentManager.addContent(content)
     }
 }

@@ -6,6 +6,7 @@ import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowAnchor
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.platform.PlatformProjectOpenProcessor.Companion.isNewProject
+import com.onetatwopi.jandi.data.RepositoryParser
 import com.onetatwopi.jandi.layout.dto.IssueInfo
 import com.onetatwopi.jandi.layout.dto.PullRequestInfo
 import com.onetatwopi.jandi.layout.panel.TabbedPanel
@@ -32,9 +33,13 @@ class MainLayout : ToolWindowFactory, DumbAware {
             project.isNewProject()
         }
 
+        val repositoryInfo = RepositoryParser.getOpenedRepository(project)
+        println("repositoryInfo = $repositoryInfo")
+
         val tabbedPanel = TabbedPanel()
 
         val pullRequestPanel = PullRequestPanel
+
         pullRequestPanel.setPullRequestInfoList(stubbingPullRequestData)
         pullRequestPanel.render()
 

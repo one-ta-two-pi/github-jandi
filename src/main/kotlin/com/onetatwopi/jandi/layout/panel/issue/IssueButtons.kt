@@ -1,5 +1,6 @@
 package com.onetatwopi.jandi.layout.panel.issue
 
+import com.intellij.util.ui.JBUI
 import com.onetatwopi.jandi.layout.dto.IssueInfo
 import java.awt.BorderLayout
 import java.awt.Component
@@ -16,6 +17,25 @@ class IssueButtons : ListCellRenderer<IssueInfo> {
     private val openUserIdLabel = JLabel()
     private val openAtLabel = JLabel()
     private val statusLabel = JLabel()
+
+    init {
+        val topPanel = JPanel(BorderLayout())
+        val bottomPanel = JPanel(BorderLayout())
+
+        topPanel.isOpaque = false
+        bottomPanel.isOpaque = false
+
+        topPanel.add(titleLabel, BorderLayout.WEST)
+        topPanel.add(openUserIdLabel, BorderLayout.EAST)
+        bottomPanel.add(openAtLabel, BorderLayout.WEST)
+        bottomPanel.add(statusLabel, BorderLayout.EAST)
+
+        button.add(topPanel, BorderLayout.NORTH)
+        button.add(bottomPanel, BorderLayout.SOUTH)
+
+        button.border = JBUI.Borders.empty(5)
+    }
+
     override fun getListCellRendererComponent(
         list: JList<out IssueInfo>?,
         value: IssueInfo?,

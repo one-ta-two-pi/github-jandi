@@ -41,16 +41,16 @@ class MainLayout : ToolWindowFactory, DumbAware {
             project.isNewProject()
         }
 
-//      val repositoryInfo = RepositoryParser.getOpenedRepository(project)
-//      println("repositoryInfo = $repositoryInfo")
+        val repositoryInfo = RepositoryParser.getOpenedRepository(project)
+        println("repositoryInfo = $repositoryInfo")
 
-        val (repoOwner, repoName) = RepositoryParser.getOpenedRepository(project)
-        println("repositoryInfo = $repoOwner, $repoName")
-
-        val modifiedRepoName = repoName.replace(".git", "")
+        // TODO: 공통 처리
+        // val (repoOwner, repoName) = RepositoryParser.getOpenedRepository(project)
+        // println("repositoryInfo = $repoOwner, $repoName")
+        // val modifiedRepoName = repoName.replace(".git", "")
 
         val tabbedPanel = TabbedPanel()
-        val pullRequestList = pullRequestService.getPullRequests("shouldAddToken", repoOwner, modifiedRepoName)
+        val pullRequestList = pullRequestService.getPullRequests("shouldAddToken", repositoryInfo)
         val pullRequestPanel = PullRequestPanel
         pullRequestPanel.setPullRequestInfoList(pullRequestList)
         pullRequestPanel.render()

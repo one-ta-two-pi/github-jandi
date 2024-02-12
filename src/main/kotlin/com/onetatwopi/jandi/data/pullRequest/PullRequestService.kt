@@ -15,7 +15,7 @@ class PullRequestService() {
     private val httpClient = HttpClient.newBuilder().build()
     private val logger = LoggerFactory.getLogger(PullRequestService::class.java)
 
-    fun getPullRequests(githubToken: String, repositoryInfo: Pair<String, String>): List<PullRequestInfo> {
+    fun getPullRequestList(githubToken: String, repositoryInfo: Pair<String, String>): List<PullRequestInfo> {
         val targetRepoName = repositoryInfo.second.replace(".git", "")
         val url = "https://api.github.com/repos/${repositoryInfo.first}/$targetRepoName/pulls"
 

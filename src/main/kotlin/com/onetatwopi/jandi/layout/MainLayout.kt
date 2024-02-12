@@ -50,7 +50,7 @@ class MainLayout : ToolWindowFactory, DumbAware {
         // val modifiedRepoName = repoName.replace(".git", "")
 
         val tabbedPanel = TabbedPanel()
-        val pullRequestList = pullRequestService.getPullRequests("shouldAddToken", repositoryInfo)
+        val pullRequestList = pullRequestService.getPullRequestList("shouldAddToken", repositoryInfo)
         val pullRequestPanel = PullRequestPanel
         pullRequestPanel.setPullRequestInfoList(pullRequestList)
         pullRequestPanel.render()

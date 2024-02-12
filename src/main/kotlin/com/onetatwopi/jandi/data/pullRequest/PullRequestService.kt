@@ -7,6 +7,8 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse.BodyHandlers
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.text.Charsets.UTF_8
 
 class PullRequestService() {
@@ -44,13 +46,29 @@ class PullRequestService() {
     }
 
     private fun generatePullRequest(jsonPullRequest: JsonObject): PullRequestInfo {
+        val isoDateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
+        val customDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
+        val createdAt = convertDateString(jsonPullRequest["created_at"]?.toString(), isoDateTimeFormatter, customDateTimeFormatter)
+        val updatedAt = convertDateString(jsonPullRequest["updated_at"]?.toString(), isoDateTimeFormatter, customDateTimeFormatter)
+
         return PullRequestInfo(
-                name = jsonPullRequest["title"].toString(),
-                requestUserId = jsonPullRequest["user"]?.jsonObject?.get("login").toString(),
-                status = jsonPullRequest["state"].toString(),
-                url = jsonPullRequest["url"].toString(),
-                createdAt = jsonPullRequest["created_at"].toString(),
-                updatedAt = jsonPullRequest["updated_at"]?.toString()
+                name = jsonPullRequest["title"]?.jsonPrimitive?.content ?: "",
+                requestUserId = jsonPullRequest["user"]?.jsonObject?.get("login")?.jsonPrimitive?.content ?: "",
+                status = jsonPullRequest["state"]?.jsonPrimitive?.content ?: "",
+                url = jsonPullRequest["url"]?.jsonPrimitive?.content ?: "",
+                createdAt = createdAt ?: "yyyy-MM-dd HH:mm:ss",
+                updatedAt = updatedAt ?: "yyyy-MM-dd HH:mm:ss"
         )
+    }
+
+    private fun convertDateString(input: String?, fromFormatter: DateTimeFormatter, toFormatter: DateTimeFormatter): String? {
+        return try {
+            input?.trim('"')?.let {
+                LocalDateTime.parse(it, fromFormatter).format(toFormatter)
+            }
+        } catch (e: Exception) {
+            throw RuntimeException("Fail to converting local time.")
+        }
     }
 }

@@ -68,7 +68,7 @@ class PullRequestService() {
                 LocalDateTime.parse(it, fromFormatter).format(toFormatter)
             }
         } catch (e: Exception) {
-            throw RuntimeException("Fail to converting local time.")
+            throw RuntimeException("Fail to convert local time.")
         }
     }
 }

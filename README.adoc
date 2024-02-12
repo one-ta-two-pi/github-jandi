@@ -1,4 +1,5 @@
 = Jandi
+
 잔디는 IntelliJ에서 쉽게 깃허브 PR(Pull Requests)를 생성할 수 있게 도와주는 플러그인 입니다.
 별도의 브라우저에서 Github 페이지를 띄워두지 않고 IntelliJ 내에서 PR 생성을 도와줍니다.
 

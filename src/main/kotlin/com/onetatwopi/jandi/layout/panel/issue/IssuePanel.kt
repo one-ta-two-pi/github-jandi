@@ -2,36 +2,52 @@ package com.onetatwopi.jandi.layout.panel.issue
 
 import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBScrollPane
+import com.onetatwopi.jandi.data.issue.IssueService
 import com.onetatwopi.jandi.layout.dto.IssueInfo
 import com.onetatwopi.jandi.layout.panel.ContentPanel
 import com.onetatwopi.jandi.layout.panel.MainPanelAdaptor
 import java.awt.BorderLayout
 import javax.swing.DefaultListModel
+import javax.swing.SwingUtilities
 
 object IssuePanel : MainPanelAdaptor<IssueInfo>, ContentPanel("Issue") {
 
     private var issueInfoList: List<IssueInfo> = ArrayList()
+    private var buttonList: JBList<IssueInfo> = JBList()
+    private var issueService: IssueService
 
-    fun setIssueInfoList(newIssueInfoList: List<IssueInfo>) {
-        this.issueInfoList = newIssueInfoList
+    init {
+        generateModel()
+        issueService = IssueService()
     }
 
-    override fun generateModel(): DefaultListModel<IssueInfo> {
+    private fun setIssueInfoList(newIssueInfoList: List<IssueInfo>) {
+        this.issueInfoList = newIssueInfoList
+        generateModel()
+    }
+
+    override fun generateModel() {
         val models = DefaultListModel<IssueInfo>()
 
         for (issueInfo in issueInfoList) {
             models.addElement(issueInfo)
         }
 
-        return models
+        this.buttonList.model = models
     }
 
     override fun render() {
-        val buttonList = JBList(generateModel())
-        buttonList.cellRenderer = IssueButtons()
-        val scrollPane = JBScrollPane(buttonList)
+        SwingUtilities.invokeLater {
+            buttonList.cellRenderer = IssueButtons()
+            val scrollPane = JBScrollPane(buttonList)
 
-        panel.layout = BorderLayout()
-        panel.add(scrollPane, BorderLayout.CENTER)
+            panel.layout = BorderLayout()
+            panel.add(scrollPane, BorderLayout.CENTER)
+            panel.revalidate()
+        }
+    }
+
+    override fun refresh() {
+        setIssueInfoList(issueService.getIssueList())
     }
 }

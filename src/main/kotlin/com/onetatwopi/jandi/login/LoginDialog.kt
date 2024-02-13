@@ -27,10 +27,9 @@ class LoginDialog(private val project: Project) : DialogWrapper(project) {
         val token = userTokenField.text
         try {
             GitClient.login(token)
+            super.doOKAction()
         } catch (e : Exception) {
-            showProcessExecutionErrorDialog(project = project, "Login Fail", "Error", "Cause", e.message!!, 2)
-            return
+            setErrorText(e.message)
         }
-        super.doOKAction()
     }
 }

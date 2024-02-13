@@ -1,6 +1,7 @@
-package com.onetatwopi.jandi.network
+package com.onetatwopi.jandi.client
 
 import com.intellij.openapi.application.PathManager
+import com.onetatwopi.jandi.login.UserInfo
 import org.apache.http.HttpHeaders
 import org.apache.http.HttpResponse
 import org.apache.http.client.config.RequestConfig
@@ -43,6 +44,7 @@ object GitClient {
             userinfo.run {
                 inputId = userId
                 inputToken = userToken
+                println(this)
             }
         }
     }
@@ -60,7 +62,7 @@ object GitClient {
             throw invalidTokenException()
         }
 
-        inputId = getLoginId(response = response)
+        inputId = getLoginIdByResponse(response = response)
 
         try {
             writeToUserFile(userInfo = UserInfo(userId = loginId!!, userToken = userToken))
@@ -82,7 +84,7 @@ object GitClient {
         }
     }
 
-    private fun getLoginId(response: HttpResponse): String {
+    private fun getLoginIdByResponse(response: HttpResponse): String {
         var loginStr: String = response.entity.content.reader(charset = Charset.defaultCharset())
             .readText().split(",")[0].split(":")[1]
 

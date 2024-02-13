@@ -1,4 +1,4 @@
-import com.onetatwopi.jandi.network.GitClient
+import com.onetatwopi.jandi.client.GitClient
 import org.junit.Test
 
 class GitClientTest {

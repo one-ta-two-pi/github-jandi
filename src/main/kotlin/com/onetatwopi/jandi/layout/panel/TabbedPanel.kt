@@ -6,6 +6,7 @@ class TabbedPanel {
 
     private var panel = JBTabbedPane()
 
+
     fun addTab(contentPanel: ContentPanel) {
         panel.addTab(contentPanel.name, contentPanel.panel)
     }

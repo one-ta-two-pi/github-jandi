@@ -4,6 +4,7 @@ import com.onetatwopi.jandi.layout.dto.PullRequestDetailInfo
 import com.onetatwopi.jandi.layout.dto.PullRequestInfo
 import kotlinx.serialization.json.*
 import org.slf4j.LoggerFactory
+import java.io.IOException
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -69,6 +70,47 @@ class PullRequestService {
         } catch (e: Exception) {
             logger.error("Error fetching pull request: ", e)
             return null
+        }
+    }
+
+    fun createPullRequest(githubToken: String, repositoryInfo: Pair<String, String>) {
+        val targetRepoName = repositoryInfo.second.replace(".git", "")
+        val url = "https://api.github.com/repos/${repositoryInfo.first}/$targetRepoName/pulls"
+
+        // TODO: parameter should be fixed (check branch info)
+        val prMockData = """
+            {
+              "title": "pr create test",
+              "user": "username",
+              "body": "Please check pr",
+              "head": "${repositoryInfo.first}:develop",
+              "base": "master"
+            }
+        """.trimIndent()
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .header("Authorization", "token $githubToken")
+            .header("X-GitHub-Api-Version", "2022-11-28")
+            .header("Accept", "application/vnd.github.v3+json")
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(prMockData))
+            .build()
+
+        try {
+            val response = httpClient.send(request, BodyHandlers.ofString(UTF_8))
+            return if (response.statusCode() == 201) {
+                // TODO: check return type
+            } else {
+                logger.error("Failed to create pull request. Status code: ${response.statusCode()}")
+            }
+        } catch (e: IOException) {
+            // TODO: check exception handling and logging
+            logger.error("Network request error occurred: ${e.message}")
+        } catch (e: IllegalArgumentException) {
+            logger.error("Error in HttpRequest configuration: ${e.message}")
+        } catch (e: Exception) {
+            logger.error("An unknown exception has occurred: ${e.message}")
         }
     }
 

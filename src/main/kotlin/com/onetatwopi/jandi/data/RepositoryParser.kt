@@ -26,7 +26,7 @@ class RepositoryParser {
             val matchResult = pattern.find(content) ?: throw RuntimeException("Repository 형식을 찾을 수 없습니다.")
 
             val user = matchResult.groupValues[1]
-            val repository = matchResult.groupValues[2]
+            val repository = matchResult.groupValues[2].replace(".git", "")
             return Pair(user, repository)
         }
     }

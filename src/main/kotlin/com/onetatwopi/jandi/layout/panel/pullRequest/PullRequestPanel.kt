@@ -2,6 +2,7 @@ package com.onetatwopi.jandi.layout.panel.pullRequest
 
 import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBScrollPane
+import com.onetatwopi.jandi.data.pullRequest.PullRequestService
 import com.onetatwopi.jandi.layout.dto.PullRequestInfo
 import com.onetatwopi.jandi.layout.panel.ContentPanel
 import com.onetatwopi.jandi.layout.panel.MainPanelAdaptor
@@ -15,12 +16,14 @@ object PullRequestPanel : MainPanelAdaptor<PullRequestInfo>, ContentPanel("Pull 
 
     private var pullRequestInfoList: List<PullRequestInfo> = ArrayList()
     private var buttonList: JBList<PullRequestInfo> = JBList()
+    private var pullRequestService: PullRequestService
 
     init {
         generateModel()
+        pullRequestService = PullRequestService()
     }
 
-    fun setPullRequestInfoList(newPullRequestInfoList: List<PullRequestInfo>) {
+    private fun setPullRequestInfoList(newPullRequestInfoList: List<PullRequestInfo>) {
         pullRequestInfoList = newPullRequestInfoList
         generateModel()
     }
@@ -76,5 +79,7 @@ object PullRequestPanel : MainPanelAdaptor<PullRequestInfo>, ContentPanel("Pull 
         } else {
             setPullRequestInfoList(ArrayList())
         }
+        // ToDo: Pull Request 정보 불러오기
+        //setPullRequestInfoList(pullRequestService.getPullRequestList())
     }
 }

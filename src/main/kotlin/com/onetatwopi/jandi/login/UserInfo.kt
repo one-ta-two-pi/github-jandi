@@ -1,4 +1,4 @@
-package com.onetatwopi.jandi.network
+package com.onetatwopi.jandi.login
 
 import java.io.Serializable
 

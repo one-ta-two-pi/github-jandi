@@ -40,10 +40,10 @@ class PullRequestButtons : ListCellRenderer<PullRequestInfo> {
         value: PullRequestInfo?,
         index: Int,
         isSelected: Boolean,
-        cellHasFocus: Boolean
+        cellHasFocus: Boolean,
     ): Component {
         value?.let {
-            titleLabel.text = it.name
+            titleLabel.text = it.title
             requestUserLabel.text = it.requestUserId
             createdAtLabel.text = it.createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             statusLabel.text = it.status

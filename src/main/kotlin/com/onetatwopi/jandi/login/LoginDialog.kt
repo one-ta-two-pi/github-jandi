@@ -2,11 +2,10 @@ package com.onetatwopi.jandi.login
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.ui.messages.showProcessExecutionErrorDialog
 import com.onetatwopi.jandi.client.GitClient
 import javax.swing.*
 
-class LoginDialog(private val project: Project) : DialogWrapper(project) {
+class LoginDialog(project: Project) : DialogWrapper(project) {
     private val userTokenField = JTextField(32)
 
     init {

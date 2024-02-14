@@ -6,7 +6,7 @@ import com.onetatwopi.jandi.client.GitClient
 import javax.swing.*
 
 class LoginDialog(project: Project) : DialogWrapper(project) {
-    private val userTokenField = JTextField(32)
+    private val userTokenField = JTextField(100)
 
     init {
         title = "Login"

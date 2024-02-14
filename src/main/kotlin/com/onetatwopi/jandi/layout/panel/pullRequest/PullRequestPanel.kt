@@ -77,9 +77,11 @@ object PullRequestPanel : MainPanelAdaptor<PullRequestInfo>, ContentPanel("Pull 
                 )
             )
         } else {
+            // ToDo: Pull Request 정보 불러오기
             setPullRequestInfoList(ArrayList())
+            // setPullRequestInfoList(pullRequestService.getPullRequestList("token", Pair("repoOwner", "repoName")))
         }
         // ToDo: Pull Request 정보 불러오기
-        //setPullRequestInfoList(pullRequestService.getPullRequestList())
+        // setPullRequestInfoList(pullRequestService.getPullRequestList("token", Pair("repoOwner", "repoName")))
     }
 }

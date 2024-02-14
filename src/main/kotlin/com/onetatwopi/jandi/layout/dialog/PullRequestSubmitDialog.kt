@@ -5,7 +5,7 @@ import java.awt.Component
 import java.awt.GridLayout
 import javax.swing.*
 
-object PullRequestDialog {
+object PullRequestSubmitDialog {
     private val dialog = JDialog()
     private val titleLabel = generateLabel("Title")
     private val titleField = JTextField(20)
@@ -43,8 +43,9 @@ object PullRequestDialog {
             close()
         }
 
-        dialog.setSize(600, 400)
+        dialog.setSize(600, 360)
         dialog.setLocationRelativeTo(null)
+        dialog.isAlwaysOnTop = true
         dialog.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
     }
 

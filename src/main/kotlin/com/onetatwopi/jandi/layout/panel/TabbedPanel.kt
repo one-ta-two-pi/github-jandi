@@ -1,7 +1,8 @@
 package com.onetatwopi.jandi.layout.panel
 
+import IssueSubmitDialog
 import com.intellij.ui.components.JBTabbedPane
-import com.onetatwopi.jandi.layout.dialog.PullRequestDialog
+import com.onetatwopi.jandi.layout.dialog.PullRequestSubmitDialog
 import com.onetatwopi.jandi.layout.panel.issue.IssuePanel
 import com.onetatwopi.jandi.layout.panel.pullRequest.PullRequestPanel
 import java.awt.BorderLayout
@@ -40,8 +41,8 @@ object TabbedPanel {
 
         addButton.addActionListener {
             when (tabbedPane.getTitleAt(tabbedPane.selectedIndex)) {
-                "Pull Request" -> PullRequestDialog.show()
-                "Issue" -> IssuePanel.refresh()
+                "Pull Request" -> PullRequestSubmitDialog.show()
+                "Issue" -> IssueSubmitDialog.show()
             }
         }
     }

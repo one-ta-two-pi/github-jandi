@@ -3,6 +3,7 @@ package com.onetatwopi.jandi.client
 import com.google.gson.Gson
 import com.intellij.openapi.application.PathManager
 import com.intellij.util.net.HTTPMethod
+import com.onetatwopi.jandi.listener.LoginIdChangeNotifier
 import com.onetatwopi.jandi.login.UserInfo
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -168,6 +169,7 @@ object GitClient {
 
         try {
             writeToUserFile(userInfo = UserInfo(userId = loginId!!, userToken = userToken))
+            LoginIdChangeNotifier.notifyLoginIdChanged(inputId)
         } catch (e: Exception) {
             e.printStackTrace()
             throw cannotWriteFileException()

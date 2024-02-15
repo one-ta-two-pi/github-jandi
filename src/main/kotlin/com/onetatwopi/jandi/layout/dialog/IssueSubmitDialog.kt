@@ -1,5 +1,7 @@
 import com.onetatwopi.jandi.data.issue.IssueService
-import java.awt.*
+import java.awt.Component
+import java.awt.Dimension
+import java.awt.GridLayout
 import javax.swing.*
 
 object IssueSubmitDialog {
@@ -18,28 +20,11 @@ object IssueSubmitDialog {
     init {
         dialog.title = "Issue"
         dialog.setSize(WIDTH, HEIGHT)
-        dialog.layout = GridBagLayout()
-        val stand = GridBagConstraints()
-
-        stand.gridx = 0
-        stand.gridy = 0
-        stand.fill = GridBagConstraints.BOTH
-        dialog.add(generatePanel(titleLabel), stand)
-
-        stand.gridy++
-        dialog.add(generatePanel(titleField), stand)
-
-        stand.gridy++
-        stand.fill = GridBagConstraints.BOTH
-        dialog.add(generatePanel(bodyLabel), stand)
-
-        stand.gridy++
-        stand.fill = GridBagConstraints.BOTH
-        dialog.add(generatePanel(JScrollPane(bodyField)), stand)
-
-        stand.gridy++
-        stand.fill = GridBagConstraints.BOTH
-        dialog.add(submitButton, stand)
+        dialog.layout = GridLayout(4, 1)
+        dialog.add(generatePanel(titleLabel, titleField))
+        dialog.add(generatePanel(bodyLabel))
+        dialog.add(generatePanel(JScrollPane(bodyField)))
+        dialog.add(submitButton)
 
         dialog.setLocationRelativeTo(null)
         dialog.isAlwaysOnTop = true

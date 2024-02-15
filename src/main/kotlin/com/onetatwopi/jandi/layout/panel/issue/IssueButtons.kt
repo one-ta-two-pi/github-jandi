@@ -1,9 +1,15 @@
 package com.onetatwopi.jandi.layout.panel.issue
 
+import com.intellij.openapi.ui.MessageType
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.notificationGroup
 import com.intellij.util.ui.JBUI
 import com.onetatwopi.jandi.layout.dto.IssueInfo
 import java.awt.BorderLayout
 import java.awt.Component
+import java.awt.Desktop
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import java.net.URI
 import java.time.format.DateTimeFormatter
 import javax.swing.JLabel
 import javax.swing.JList
@@ -41,7 +47,7 @@ class IssueButtons : ListCellRenderer<IssueInfo> {
         value: IssueInfo?,
         index: Int,
         isSelected: Boolean,
-        cellHasFocus: Boolean
+        cellHasFocus: Boolean,
     ): Component {
         value?.let {
             titleLabel.text = it.title
@@ -52,6 +58,22 @@ class IssueButtons : ListCellRenderer<IssueInfo> {
 
         button.background = if (isSelected) list?.selectionBackground else list?.background
         button.foreground = if (isSelected) list?.selectionForeground else list?.foreground
+
+        list?.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(e: MouseEvent) {
+                if (e.clickCount == 2 && !e.isConsumed) {
+                    e.consume()
+                    val selectedIndex = list.selectedIndex
+                    if (selectedIndex != -1) {
+                        value?.let {
+                            Desktop.getDesktop().browse(URI(value.url))
+                        } ?: run {
+                            notificationGroup.createNotification("No url!", MessageType.WARNING)
+                        }
+                    }
+                }
+            }
+        })
 
         return button
     }

@@ -14,7 +14,7 @@ data class IssueInfo(
     @SerializedName("user")
     @JsonAdapter(UsernameDeserializer::class)
     val createUserId: String,
-    val url: String,
+    @SerializedName("html_url") val url: String,
     @SerializedName("state") val status: String,
     @SerializedName("created_at") val openAt: String,
     @SerializedName("closed_at") val closeAt: String,

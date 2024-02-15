@@ -1,14 +1,17 @@
 package com.onetatwopi.jandi.layout.panel.pullRequest
 
-import com.intellij.util.ui.JBUI
+import com.intellij.openapi.ui.MessageType
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.notificationGroup
 import com.onetatwopi.jandi.layout.dto.PullRequestInfo
 import java.awt.BorderLayout
 import java.awt.Component
+import java.awt.Desktop
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import java.net.URI
 import java.time.format.DateTimeFormatter
-import javax.swing.JLabel
-import javax.swing.JList
-import javax.swing.JPanel
-import javax.swing.ListCellRenderer
+import javax.swing.*
+
 
 class PullRequestButtons : ListCellRenderer<PullRequestInfo> {
     private val button = JPanel(BorderLayout())
@@ -32,7 +35,7 @@ class PullRequestButtons : ListCellRenderer<PullRequestInfo> {
         button.add(topPanel, BorderLayout.NORTH)
         button.add(bottomPanel, BorderLayout.SOUTH)
 
-        button.border = JBUI.Borders.empty(5)
+        button.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     }
 
     override fun getListCellRendererComponent(
@@ -51,6 +54,22 @@ class PullRequestButtons : ListCellRenderer<PullRequestInfo> {
 
         button.background = if (isSelected) list?.selectionBackground else list?.background
         button.foreground = if (isSelected) list?.selectionForeground else list?.foreground
+
+        list?.addMouseListener(object : MouseAdapter() {
+            override fun mouseClicked(e: MouseEvent) {
+                if (e.clickCount == 2 && !e.isConsumed) {
+                    e.consume()
+                    val selectedIndex = list.selectedIndex
+                    if (selectedIndex != -1) {
+                        value?.let {
+                            Desktop.getDesktop().browse(URI(value.url))
+                        } ?: run {
+                            notificationGroup.createNotification("No url!", MessageType.WARNING)
+                        }
+                    }
+                }
+            }
+        })
 
         return button
     }

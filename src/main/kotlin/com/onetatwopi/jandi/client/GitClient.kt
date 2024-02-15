@@ -3,6 +3,7 @@ package com.onetatwopi.jandi.client
 import com.google.gson.Gson
 import com.intellij.openapi.application.PathManager
 import com.intellij.util.net.HTTPMethod
+import com.onetatwopi.jandi.listener.LoginIdChangeNotifier
 import com.onetatwopi.jandi.login.UserInfo
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -43,7 +44,7 @@ object GitClient {
                 .build()
         ).build()
     private val userFilePath: Path = Paths.get(PathManager.getPluginsPath() + File.separator + "userInfo.txt")
-    private const val repoUrl : String = "https://api.github.com/repos/"
+    private const val repoUrl: String = "https://api.github.com/repos/"
 
     init {
         if (Files.exists(userFilePath)) {
@@ -86,27 +87,33 @@ object GitClient {
         }
     }
 
-    fun repoRequest(method : HTTPMethod, repo : String, category: Category, body : List<NameValuePair>, number : Int) : String {
+    fun repoRequest(
+        method: HTTPMethod,
+        repo: String,
+        category: Category,
+        body: List<NameValuePair>,
+        number: Int,
+    ): String {
         val reqUrl = "$repoUrl$loginId/$repo/${category.value}/$number"
         val request: HttpUriRequest = makeRepoRequest(url = reqUrl, method = method, body = body)
 
         return getRepoResponse(request = request)
     }
 
-    fun repoRequest(method : HTTPMethod, repo : String, category: Category, number : Int) : String {
+    fun repoRequest(method: HTTPMethod, repo: String, category: Category, number: Int): String {
         val reqUrl = "$repoUrl$loginId/$repo/${category.value}/$number"
         val request: HttpUriRequest = makeRepoRequest(url = reqUrl, method = method)
 
         return getRepoResponse(request = request)
     }
 
-    fun repoRequest(method : HTTPMethod, repo : String, category: Category, body : List<NameValuePair>) : String {
+    fun repoRequest(method: HTTPMethod, repo: String, category: Category, body: List<NameValuePair>): String {
         val reqUrl = "$repoUrl$loginId/$repo/${category.value}"
         val request: HttpUriRequest = makeRepoRequest(url = reqUrl, method = method, body = body)
         return getRepoResponse(request = request)
     }
 
-    fun repoRequest(method : HTTPMethod, repo : String, category: Category) : String {
+    fun repoRequest(method: HTTPMethod, repo: String, category: Category): String {
         val reqUrl = "$repoUrl$loginId/$repo/${category.value}"
         val request: HttpUriRequest = makeRepoRequest(url = reqUrl, method = method)
 
@@ -121,12 +128,14 @@ object GitClient {
     }
 
     private fun makeRepoRequest(method: HTTPMethod, url: String, body: List<NameValuePair>): HttpUriRequest {
-        return when(method) {
+        return when (method) {
             HTTPMethod.GET -> RequestBuilder.get(url)
             HTTPMethod.PUT -> RequestBuilder.put(url)
             HTTPMethod.PATCH -> RequestBuilder.patch(url)
             HTTPMethod.POST -> RequestBuilder.post(url)
-            else -> { throw RuntimeException("정의 되지 않은 http 메소드 요청") }
+            else -> {
+                throw RuntimeException("정의 되지 않은 http 메소드 요청")
+            }
         }.apply {
             addHeader(HttpHeaders.ACCEPT, "application/vnd.github+json")
             addHeader(HttpHeaders.AUTHORIZATION, "Bearer $userToken")
@@ -136,12 +145,14 @@ object GitClient {
     }
 
     private fun makeRepoRequest(method: HTTPMethod, url: String): HttpUriRequest {
-        return when(method) {
+        return when (method) {
             HTTPMethod.GET -> RequestBuilder.get(url)
             HTTPMethod.PUT -> RequestBuilder.put(url)
             HTTPMethod.PATCH -> RequestBuilder.patch(url)
             HTTPMethod.POST -> RequestBuilder.post(url)
-            else -> { throw RuntimeException("정의 되지 않은 http 메소드 요청") }
+            else -> {
+                throw RuntimeException("정의 되지 않은 http 메소드 요청")
+            }
         }.apply {
             addHeader(HttpHeaders.ACCEPT, "application/vnd.github+json")
             addHeader(HttpHeaders.AUTHORIZATION, "Bearer $userToken")
@@ -168,6 +179,7 @@ object GitClient {
 
         try {
             writeToUserFile(userInfo = UserInfo(userId = loginId!!, userToken = userToken))
+            LoginIdChangeNotifier.notifyLoginIdChanged(inputId)
         } catch (e: Exception) {
             e.printStackTrace()
             throw cannotWriteFileException()

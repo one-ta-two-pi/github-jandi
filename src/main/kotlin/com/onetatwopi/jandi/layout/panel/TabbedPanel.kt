@@ -64,7 +64,7 @@ object TabbedPanel {
 
                 notification.notify(project)
 
-                //return@addActionListener
+                return@addActionListener
             }
             when (tabbedPane.getTitleAt(tabbedPane.selectedIndex)) {
                 "Pull Request" -> PullRequestSubmitDialog.show()

@@ -15,7 +15,7 @@ object PullRequestSubmitDialog {
     private val headLabel = generateLabel("Head")
     private val headComboBox = ComboBox(ProjectRepository.getRemoteBranchList())
     private val baseLabel = generateLabel("Base")
-    private val baseComboBox = ComboBox(ProjectRepository.getRemoteBranchList())
+    private val baseComboBox = ComboBox(ProjectRepository.getLocalBranchList())
     private val submitButton = JButton("Submit")
 
     //private val pullRequestService = PullRequestService()

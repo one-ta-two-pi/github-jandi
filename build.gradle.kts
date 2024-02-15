@@ -45,3 +45,7 @@ tasks {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }
 }
+
+dependencies {
+    implementation("com.google.code.gson:gson:2.8.8")
+}

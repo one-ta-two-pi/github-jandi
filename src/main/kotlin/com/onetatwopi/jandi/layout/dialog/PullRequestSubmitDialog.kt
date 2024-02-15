@@ -1,6 +1,7 @@
 package com.onetatwopi.jandi.layout.dialog
 
 import com.intellij.openapi.ui.ComboBox
+import com.onetatwopi.jandi.project.ProjectRepository
 import java.awt.Component
 import java.awt.GridLayout
 import javax.swing.*
@@ -12,9 +13,9 @@ object PullRequestSubmitDialog {
     private val bodyLabel = generateLabel("Detail")
     private val bodyField = JTextArea(2, 20)
     private val headLabel = generateLabel("Head")
-    private val headComboBox = ComboBox(arrayOf("develop", "master"))
+    private val headComboBox = ComboBox(ProjectRepository.getRemoteBranchList())
     private val baseLabel = generateLabel("Base")
-    private val baseComboBox = ComboBox(arrayOf("develop", "master"))
+    private val baseComboBox = ComboBox(ProjectRepository.getRemoteBranchList())
     private val submitButton = JButton("Submit")
 
     //private val pullRequestService = PullRequestService()

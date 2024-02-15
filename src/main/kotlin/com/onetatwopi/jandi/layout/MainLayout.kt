@@ -8,6 +8,7 @@ import com.intellij.openapi.wm.ToolWindowFactory
 import com.onetatwopi.jandi.layout.panel.TabbedPanel
 import com.onetatwopi.jandi.layout.panel.issue.IssuePanel
 import com.onetatwopi.jandi.layout.panel.pullRequest.PullRequestPanel
+import com.onetatwopi.jandi.project.ProjectRepository
 
 class MainLayout : ToolWindowFactory, DumbAware {
 
@@ -23,7 +24,9 @@ class MainLayout : ToolWindowFactory, DumbAware {
 //            _: Exception
 //        ) {
 //            println("No .git Folder")
-//        }
+//        }-
+
+        ProjectRepository.setProject(project)
 
 
         // TODO: 공통 처리
@@ -32,9 +35,7 @@ class MainLayout : ToolWindowFactory, DumbAware {
         // val modifiedRepoName = repoName.replace(".git", "")
 
         val tabbedPanel = TabbedPanel
-        //val pullRequestList = pullRequestService.getPullRequestList("shouldAddToken", repositoryInfo)
         val pullRequestPanel = PullRequestPanel
-        //pullRequestPanel.setPullRequestInfoList(pullRequestList)
         pullRequestPanel.render()
 
         val issuePanel = IssuePanel

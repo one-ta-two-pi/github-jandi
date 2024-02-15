@@ -6,6 +6,8 @@ import com.google.gson.JsonElement
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import java.lang.reflect.Type
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 data class IssueInfo(
     val title: String,
@@ -15,8 +17,14 @@ data class IssueInfo(
     val url: String,
     @SerializedName("state") val status: String,
     @SerializedName("created_at") val openAt: String,
-    @SerializedName("closed_at") val closeAt: String?
-)
+    @SerializedName("closed_at") val closeAt: String,
+) {
+    val openAtAsDate: LocalDateTime
+        get() {
+            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            return LocalDateTime.parse(openAt, formatter)
+        }
+}
 
 class UsernameDeserializer : JsonDeserializer<String> {
     override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): String {

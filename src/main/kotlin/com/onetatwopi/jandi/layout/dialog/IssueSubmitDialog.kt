@@ -12,8 +12,6 @@ object IssueSubmitDialog {
     private val bodyField = JTextArea(2, 20)
     private val submitButton = JButton("Submit")
 
-    private val issueService = IssueService()
-
     private const val WIDTH = 600
     private const val HEIGHT = 400
 

@@ -10,7 +10,7 @@ import com.onetatwopi.jandi.layout.dto.IssueInfo
 
 object IssueService {
 
-    private val MAX_ISSUES = 10
+    private const val MAX_ISSUES = 10
 
     init {
         parseIssueList()
@@ -26,6 +26,11 @@ object IssueService {
         val response = getResponse()
         val listType = object : TypeToken<List<IssueInfo>>() {}.type
         val jsonIssues: List<IssueInfo> = Gson().fromJson(response, listType)
-        return jsonIssues.toMutableList()
+
+        // TODO: 페이징 처리 미구현 대신 최대 10개만 가져오도록 처리
+        val sortedIssues = jsonIssues.sortedByDescending { it.openAtAsDate }
+        val limitedIssues = sortedIssues.take(MAX_ISSUES)
+
+        return limitedIssues.toMutableList()
     }
 }

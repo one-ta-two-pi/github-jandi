@@ -53,7 +53,7 @@ class IssueButtons : ListCellRenderer<IssueInfo> {
             titleLabel.text = it.title
             openUserIdLabel.text = it.createUserId
             openAtLabel.text = it.openAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-            statusLabel.text = it.status
+            statusLabel.text = it.status.uppercase()
         }
 
         button.background = if (isSelected) list?.selectionBackground else list?.background

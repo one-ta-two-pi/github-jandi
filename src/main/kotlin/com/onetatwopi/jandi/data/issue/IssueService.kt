@@ -47,12 +47,12 @@ class IssueService private constructor() {
         val (title, body, milestone) = issueSubmit
 
         val requestBody = mutableListOf(
-            BasicNameValuePair("title", title),
-            BasicNameValuePair("body", body),
+            Pair("title", title),
+            Pair("body", body),
         )
 
         if (milestone.isNotBlank()) {
-            requestBody.add(BasicNameValuePair("milestone", milestone))
+            requestBody.add(Pair("milestone", milestone))
         }
 
         val response = GitClient.repoRequest(

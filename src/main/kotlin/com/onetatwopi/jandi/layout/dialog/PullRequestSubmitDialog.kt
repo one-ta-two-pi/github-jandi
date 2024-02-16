@@ -87,4 +87,8 @@ object PullRequestSubmitDialog {
             this.dialog.isVisible = false
         }
     }
+
+    fun isShowing(): Boolean {
+        return this.dialog.isShowing
+    }
 }

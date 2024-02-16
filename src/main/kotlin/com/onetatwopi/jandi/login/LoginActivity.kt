@@ -1,7 +1,8 @@
 package com.onetatwopi.jandi.login
 
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.Messages
+import com.onetatwopi.jandi.layout.notification.NotificationFactory
 
 class LoginActivity {
     fun run(project: Project) {
@@ -9,7 +10,7 @@ class LoginActivity {
         dialog.show()
 
         if (dialog.isOK) {
-            Messages.showMessageDialog("로그인 성공!", "Information", Messages.getInformationIcon())
+            NotificationFactory.notify("Login success!", NotificationType.INFORMATION)
         } else {
             return
         }

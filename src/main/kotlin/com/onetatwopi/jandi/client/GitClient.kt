@@ -6,6 +6,7 @@ import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.notificationGroup
 import com.intellij.util.net.HTTPMethod
+import com.onetatwopi.jandi.layout.notification.NotificationFactory
 import com.onetatwopi.jandi.listener.LoginIdChangeNotifier
 import com.onetatwopi.jandi.login.LoginActivity
 import com.onetatwopi.jandi.project.ProjectRepository
@@ -126,8 +127,7 @@ object GitClient {
 
         /* TODO : 권한 부족할 때 토큰 처리 */
         if(response.statusLine.statusCode == 401 || response.statusLine.statusCode == 403) {
-            notificationGroup.createNotification("Not authorized", NotificationType.WARNING)
-            Messages.showMessageDialog("토큰에 권한이 없습니다! 다른 토큰을 사용하여 로그인 해주세요.", "Not authorized", Messages.getErrorIcon())
+           NotificationFactory.notify("Not authorized", NotificationType.WARNING)
         }
 
         return response.entity.content.reader(charset = Charset.defaultCharset())

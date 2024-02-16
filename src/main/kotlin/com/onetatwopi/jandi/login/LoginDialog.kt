@@ -6,7 +6,7 @@ import com.onetatwopi.jandi.client.GitClient
 import javax.swing.*
 
 class LoginDialog(project: Project) : DialogWrapper(project) {
-    private val userTokenField = JTextField(32)
+    private val userTokenField = JPasswordField(32)
 
     init {
         title = "Login"
@@ -23,7 +23,7 @@ class LoginDialog(project: Project) : DialogWrapper(project) {
     }
 
     override fun doOKAction() {
-        val token = userTokenField.text
+        val token = userTokenField.password.concatToString()
         try {
             GitClient.login(token)
             super.doOKAction()

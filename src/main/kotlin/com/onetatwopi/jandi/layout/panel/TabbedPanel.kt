@@ -8,6 +8,7 @@ import com.onetatwopi.jandi.client.GitClient
 import com.onetatwopi.jandi.layout.dialog.PullRequestSubmitDialog
 import com.onetatwopi.jandi.layout.panel.issue.IssuePanel
 import com.onetatwopi.jandi.layout.panel.pullRequest.PullRequestPanel
+import com.onetatwopi.jandi.login.LoginActivity
 import com.onetatwopi.jandi.project.ProjectRepository
 import org.reflections.Reflections
 import java.awt.BorderLayout
@@ -25,6 +26,7 @@ object TabbedPanel {
     private val repositoryComboBox = JComboBox<String>()
     private val addButton = JButton("+")
     private val refreshButton = JButton("Refresh")
+    private val loginButton = JButton("Login")
     private val project = ProjectRepository.getProject()
 
     init {
@@ -37,6 +39,7 @@ object TabbedPanel {
         buttonPanel.add(repositoryComboBox)
         buttonPanel.add(addButton)
         buttonPanel.add(refreshButton)
+        buttonPanel.add(loginButton)
 
         panel.add(buttonPanel, BorderLayout.NORTH)
         panel.add(tabbedPane, BorderLayout.CENTER)
@@ -79,6 +82,10 @@ object TabbedPanel {
                 "Pull Request" -> PullRequestSubmitDialog.show()
                 "Issue" -> IssueSubmitDialog.show()
             }
+        }
+
+        loginButton.addActionListener {
+            LoginActivity().run(project = project)
         }
 
         repositoryComboBox.addActionListener {

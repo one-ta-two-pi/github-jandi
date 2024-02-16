@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import com.intellij.openapi.application.PathManager
 import com.intellij.util.net.HTTPMethod
 import com.onetatwopi.jandi.listener.LoginIdChangeNotifier
-import com.onetatwopi.jandi.login.UserInfo
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import org.apache.http.HttpHeaders
@@ -48,17 +47,20 @@ object GitClient {
 
     init {
         if (Files.exists(userFilePath)) {
-            val userinfo: UserInfo = try {
+            val userToken: String = try {
                 readFromUserFile()
             } catch (e: Exception) {
                 throw inValidTokenFileException()
             }
 
-            userinfo.run {
+            try {
+                val userId: String = requestGitLogin(userToken = userToken)
                 inputId = userId
                 inputToken = userToken
+                setRepos()
+            } catch (e: Exception) {
+                LoginIdChangeNotifier.notifyLoginIdChanged(newLoginId = null, isUpdate = false)
             }
-            setRepos()
         }
     }
 
@@ -150,47 +152,47 @@ object GitClient {
         }.build()
     }
 
-    fun login(userToken: String) {
+    private fun requestGitLogin(userToken : String) : String {
         val request: HttpUriRequest = RequestBuilder.get("https://api.github.com/user")
             .setHeader(HttpHeaders.ACCEPT, "application/vnd.github+json")
             .setHeader(HttpHeaders.AUTHORIZATION, "Bearer $userToken")
             .setHeader("X-GitHub-Api-Version", apiVersion)
             .build()
 
-        val response: HttpResponse = httpclient.execute(request)
-
+        val response: HttpResponse =  httpclient.execute(request)
         if (response.statusLine.statusCode != 200) {
             throw invalidTokenException()
         }
 
-        inputId = getLoginIdByResponse(response = response)
+        return getLoginIdByResponse(response = response)
+    }
+
+    fun login(userToken: String) {
+        inputId = requestGitLogin(userToken = userToken)
         inputToken = userToken
         setRepos()
 
         try {
-            LoginIdChangeNotifier.notifyLoginIdChanged(inputId)
+            LoginIdChangeNotifier.notifyLoginIdChanged(newLoginId = loginId, isUpdate = inputToken != null)
         } catch (e : Exception) {
             e.printStackTrace()
         }
-
         try {
-            writeToUserFile(userInfo = UserInfo(userId = loginId!!, userToken = userToken))
+            writeToUserFile(userToken = userToken)
         } catch (e: Exception) {
             e.printStackTrace()
             throw cannotWriteFileException()
         }
     }
 
-    private fun writeToUserFile(userInfo: UserInfo) {
-        ObjectOutputStream(FileOutputStream(userFilePath.toString())).use { stream ->
-            stream.writeObject(userInfo)
-        }
+    private fun writeToUserFile(userToken: String) {
+        val file = File(userFilePath.toString())
+        file.writeText(userToken)
     }
 
-    private fun readFromUserFile(): UserInfo {
-        ObjectInputStream(FileInputStream(userFilePath.toString())).use { stream ->
-            return stream.readObject() as UserInfo
-        }
+    private fun readFromUserFile(): String {
+        val file = File(userFilePath.toString())
+        return file.readText()
     }
 
     private fun getLoginIdByResponse(response: HttpResponse): String {

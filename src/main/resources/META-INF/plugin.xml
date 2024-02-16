@@ -27,7 +27,6 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Github Jandi" secondary="false" anchor="left" factoryClass="com.onetatwopi.jandi.layout.MainLayout"/>
-        <postStartupActivity implementation="com.onetatwopi.jandi.login.LoginActivity"/>
     </extensions>
     <actions>
     </actions>

@@ -17,15 +17,13 @@ object PullRequestPanel : MainPanelAdaptor<PullRequestInfo>, ContentPanel("Pull 
 
     private var pullRequestInfoList: List<PullRequestInfo> = ArrayList()
     private var buttonList: JBList<PullRequestInfo> = JBList()
-    private var pullRequestService: PullRequestService
 
     init {
         generateModel()
-        pullRequestService = PullRequestService()
     }
 
     private fun setPullRequestInfoList(newPullRequestInfoList: List<PullRequestInfo>) {
-        pullRequestInfoList = newPullRequestInfoList
+        this.pullRequestInfoList = newPullRequestInfoList
         generateModel()
     }
 
@@ -105,11 +103,8 @@ object PullRequestPanel : MainPanelAdaptor<PullRequestInfo>, ContentPanel("Pull 
                 )
             )
         } else {
-            // ToDo: Pull Request 정보 불러오기
-            setPullRequestInfoList(ArrayList())
-            // setPullRequestInfoList(pullRequestService.getPullRequestList("token", Pair("repoOwner", "repoName")))
+            setPullRequestInfoList(PullRequestService.instance.parsePullRequestList())
         }
-        // ToDo: Pull Request 정보 불러오기
-        // setPullRequestInfoList(pullRequestService.getPullRequestList("token", Pair("repoOwner", "repoName")))
+        setPullRequestInfoList(PullRequestService.instance.parsePullRequestList())
     }
 }

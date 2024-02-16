@@ -119,6 +119,10 @@ object GitClient {
     private fun getRepoResponse(request: HttpUriRequest): String {
         val response = httpclient.execute(request)
 
+        /* TODO : 권한 부족할 때 토큰 처리 */
+//        if(response.statusLine.statusCode == 404 || response.statusLine.statusCode == 403) {
+//
+//        }
         return response.entity.content.reader(charset = Charset.defaultCharset())
             .readText()
     }
@@ -169,11 +173,12 @@ object GitClient {
 
     fun login(userToken: String) {
         inputId = requestGitLogin(userToken = userToken)
+        val wasTokenExist = inputToken != null
         inputToken = userToken
         setRepos()
 
         try {
-            LoginIdChangeNotifier.notifyLoginIdChanged(newLoginId = loginId, isUpdate = inputToken != null)
+            LoginIdChangeNotifier.notifyLoginIdChanged(newLoginId = loginId, isUpdate = wasTokenExist)
         } catch (e : Exception) {
             e.printStackTrace()
         }

@@ -74,7 +74,7 @@ object PullRequestPanel : MainPanelAdaptor<PullRequestInfo>, ContentPanel("Pull 
                         "Pull Request 2",
                         "User2",
                         "Closed",
-                        "https://www.naver.com",
+                        "https://www.duam.net",
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         PullRequestDetailInfo(
                             number = 2,
@@ -90,7 +90,7 @@ object PullRequestPanel : MainPanelAdaptor<PullRequestInfo>, ContentPanel("Pull 
                         "Pull Request 3",
                         "User3",
                         "In Progress",
-                        "https://www.naver.com",
+                        "https://www.google.com",
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         PullRequestDetailInfo(
                             number = 3,

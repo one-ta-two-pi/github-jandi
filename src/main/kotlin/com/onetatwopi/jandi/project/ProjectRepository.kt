@@ -34,12 +34,17 @@ object ProjectRepository {
         val branches = mutableSetOf<String>()
 
         for (root in projectRoots) {
-            val remote = File(root.path, ".git/refs/heads")
+            val remote = File(root.path, ".git/refs/remotes")
             if (remote.exists() && remote.isDirectory) {
                 remote.listFiles()?.filter {
-                    it.isFile
-                }?.forEach {
-                    branches.add(it.name)
+                    it.isDirectory
+                }?.forEach { outer ->
+                    outer.listFiles()?.filter {
+                        !it.name.equals("HEAD")
+                                && it.isFile
+                    }?.forEach {
+                        branches.add(it.name)
+                    }
                 }
             }
         }
@@ -60,7 +65,6 @@ object ProjectRepository {
             if (remote.exists() && remote.isDirectory) {
                 remote.listFiles()?.filter {
                     it.isDirectory
-                            && it.isDirectory
                 }?.forEach { outer ->
                     val remoteName = outer.name
                     outer.listFiles()?.filter {

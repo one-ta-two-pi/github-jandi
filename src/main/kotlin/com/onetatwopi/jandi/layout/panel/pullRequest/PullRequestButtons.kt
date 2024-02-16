@@ -1,7 +1,5 @@
 package com.onetatwopi.jandi.layout.panel.pullRequest
 
-import com.intellij.openapi.ui.MessageType
-import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.notificationGroup
 import com.onetatwopi.jandi.layout.dto.PullRequestInfo
 import java.awt.BorderLayout
 import java.awt.Component
@@ -61,11 +59,8 @@ class PullRequestButtons : ListCellRenderer<PullRequestInfo> {
                     e.consume()
                     val selectedIndex = list.selectedIndex
                     if (selectedIndex != -1) {
-                        value?.let {
-                            Desktop.getDesktop().browse(URI(value.url))
-                        } ?: run {
-                            notificationGroup.createNotification("No url!", MessageType.WARNING)
-                        }
+                        val selected = list.model.getElementAt(selectedIndex)
+                        Desktop.getDesktop().browse(URI(selected.url))
                     }
                 }
             }

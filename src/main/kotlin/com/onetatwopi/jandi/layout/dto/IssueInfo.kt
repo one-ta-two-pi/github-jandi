@@ -32,5 +32,6 @@ data class IssueInfo(
             return openAtAsDate.format(formatter)
         }
 
-    val upperStatus = status.uppercase()
+    val upperStatus: String
+        get() = status.uppercase()
 }

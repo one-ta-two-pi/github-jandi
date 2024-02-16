@@ -1,3 +1,5 @@
+package com.onetatwopi.jandi.layout.dialog
+
 import com.intellij.openapi.ui.Messages
 import com.onetatwopi.jandi.data.issue.IssueService
 import com.onetatwopi.jandi.layout.dto.IssueSubmit
@@ -7,48 +9,38 @@ import javax.swing.*
 
 object IssueSubmitDialog {
     private val dialog = JDialog()
-    private val titleLabel = generateLabel("Title")
-    private val titleField = JTextField(20)
-    private val bodyLabel = generateLabel("Detail")
-    private val bodyField = JTextArea(5, 20)
-    private val milestoneLabel = JLabel("Milestone")
-    private val milestoneField = JTextField()
-    private val submitButton = JButton("Submit")
 
     private const val WIDTH = 400
     private const val HEIGHT = 250
 
     init {
+        initializeDialog()
+        initializeComponents()
+    }
+
+    private fun initializeDialog() {
         dialog.title = "Create Issue"
         dialog.setSize(WIDTH, HEIGHT)
         dialog.layout = GridBagLayout()
+        dialog.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
+        dialog.setLocationRelativeTo(null)
+    }
 
+    private fun initializeComponents() {
         val font = Font("Arial", Font.PLAIN, 14) // Custom font
 
-        titleLabel.font = font
-        addComponentToDialog(titleLabel, 0, 0, 1, 1, GridBagConstraints.HORIZONTAL)
+        val titleLabel = generateLabel("Title")
+        val titleField = generateTextField(20, "Enter the issue title here")
 
-        titleField.font = font
-        titleField.toolTipText = "Enter the issue title here"
-        addComponentToDialog(titleField, 1, 0, 2, 1, GridBagConstraints.HORIZONTAL)
+        val bodyLabel = generateLabel("Detail")
+        val bodyField = generateTextArea(5, 20, "Enter the issue details here")
 
-        bodyLabel.font = font
-        addComponentToDialog(bodyLabel, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL)
+        val milestoneLabel = generateLabel("Milestone")
+        val milestoneField = generateTextField(10, "Enter the milestone here")
 
-        bodyField.font = font
-        bodyField.toolTipText = "Enter the issue details here"
-        addComponentToDialog(JScrollPane(bodyField), 1, 1, 2, 1, GridBagConstraints.BOTH)
-
-        milestoneLabel.font = font
-        addComponentToDialog(milestoneLabel, 0, 2, 1, 1, GridBagConstraints.HORIZONTAL)
-
-        milestoneField.font = font
-        milestoneField.toolTipText = "Enter the milestone here"
-        addComponentToDialog(milestoneField, 1, 2, 2, 1, GridBagConstraints.HORIZONTAL)
-
+        val submitButton = JButton("Submit")
         submitButton.font = font
         submitButton.addActionListener {
-
             val issueSubmit = IssueSubmit(
                 title = titleField.text,
                 body = bodyField.text,
@@ -63,10 +55,57 @@ object IssueSubmitDialog {
             close()
             IssuePanel.refresh()
         }
-        addComponentToDialog(submitButton, 0, 3, 3, 1, GridBagConstraints.HORIZONTAL)
 
-        dialog.setLocationRelativeTo(null)
-        dialog.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
+        addComponentToDialog(titleLabel, 0, 0, 1, 1, GridBagConstraints.HORIZONTAL)
+        addComponentToDialog(titleField, 1, 0, 2, 1, GridBagConstraints.HORIZONTAL)
+        addComponentToDialog(bodyLabel, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL)
+        addComponentToDialog(JScrollPane(bodyField), 1, 1, 2, 1, GridBagConstraints.BOTH)
+        addComponentToDialog(milestoneLabel, 0, 2, 1, 1, GridBagConstraints.HORIZONTAL)
+        addComponentToDialog(milestoneField, 1, 2, 2, 1, GridBagConstraints.HORIZONTAL)
+        addComponentToDialog(submitButton, 0, 3, 3, 1, GridBagConstraints.HORIZONTAL)
+    }
+
+    private fun generateTextField(columns: Int, toolTip: String): JTextField {
+        val textField = JTextField(columns)
+        textField.font = Font("Arial", Font.PLAIN, 14)
+        textField.toolTipText = toolTip
+        return textField
+    }
+
+    private fun generateTextArea(rows: Int, columns: Int, toolTip: String): JTextArea {
+        val textArea = JTextArea(rows, columns)
+        textArea.font = Font("Arial", Font.PLAIN, 14)
+        textArea.toolTipText = toolTip
+        return textArea
+    }
+
+    private fun generateLabel(text: String): JLabel {
+        val label = JLabel(text)
+        label.verticalAlignment = SwingConstants.CENTER
+        label.horizontalAlignment = SwingConstants.CENTER
+        label.font = Font("Arial", Font.PLAIN, 14)
+        return label
+    }
+
+    private fun addComponentToDialog(
+        component: Component,
+        gridX: Int,
+        gridY: Int,
+        gridWidth: Int,
+        gridHeight: Int,
+        fill: Int
+    ) {
+        val gbc = GridBagConstraints()
+        gbc.gridx = gridX
+        gbc.gridy = gridY
+        gbc.gridwidth = gridWidth
+        gbc.gridheight = gridHeight
+        gbc.insets = Insets(5, 5, 5, 5)
+        gbc.fill = fill
+        gbc.weightx = 1.0 // Ensure components expand horizontally
+        gbc.weighty = 1.0 // Ensure components expand vertically
+
+        dialog.add(component, gbc)
     }
 
     private fun validInput(issueSubmit: IssueSubmit): Boolean {
@@ -94,49 +133,28 @@ object IssueSubmitDialog {
         return true
     }
 
-    private fun addComponentToDialog(
-        component: Component,
-        gridX: Int,
-        gridY: Int,
-        gridWidth: Int,
-        gridHeight: Int,
-        fill: Int
-    ) {
-        val gbc = GridBagConstraints()
-        gbc.gridx = gridX
-        gbc.gridy = gridY
-        gbc.gridwidth = gridWidth
-        gbc.gridheight = gridHeight
-        gbc.insets = Insets(5, 5, 5, 5)
-        gbc.fill = fill
-        gbc.weightx = 1.0 // Ensure components expand horizontally
-        gbc.weighty = 1.0 // Ensure components expand vertically
-
-        dialog.add(component, gbc)
-    }
-
-    private fun init() {
-        titleField.text = ""
-        bodyField.text = ""
+    private fun clearTextComponents(container: Container) {
+        for (component in container.components) {
+            when (component) {
+                is JTextField -> component.text = ""
+                is JTextArea -> component.text = ""
+                is JScrollPane -> clearTextComponents(component)
+                is Container -> clearTextComponents(component)
+            }
+        }
     }
 
     fun show() {
-        if (!this.dialog.isShowing) {
-            init()
-            this.dialog.isVisible = true
+        if (!dialog.isShowing) {
+            clearTextComponents(dialog)
+            dialog.isVisible = true
+            dialog.paintAll(dialog.graphics)
         }
     }
 
     private fun close() {
-        if (this.dialog.isShowing) {
-            this.dialog.isVisible = false
+        if (dialog.isShowing) {
+            dialog.isVisible = false
         }
-    }
-
-    private fun generateLabel(text: String): JLabel {
-        val label = JLabel(text)
-        label.verticalAlignment = SwingConstants.CENTER
-        label.horizontalAlignment = SwingConstants.CENTER
-        return label
     }
 }

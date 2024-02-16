@@ -9,10 +9,13 @@ import com.onetatwopi.jandi.layout.dialog.PullRequestSubmitDialog
 import com.onetatwopi.jandi.layout.panel.issue.IssuePanel
 import com.onetatwopi.jandi.layout.panel.pullRequest.PullRequestPanel
 import com.onetatwopi.jandi.project.ProjectRepository
+import org.reflections.Reflections
 import java.awt.BorderLayout
 import javax.swing.JButton
+import javax.swing.JComboBox
 import javax.swing.JPanel
 import javax.swing.Timer
+import kotlin.reflect.KClass
 
 
 object TabbedPanel {
@@ -20,12 +23,19 @@ object TabbedPanel {
     private val panel = JPanel(BorderLayout())
 
     private val tabbedPane = JBTabbedPane()
+    private val repositoryComboBox = JComboBox<String>()
     private val addButton = JButton("+")
     private val refreshButton = JButton("Refresh")
     private val project = ProjectRepository.getProject()
 
     init {
         val buttonPanel = JPanel()
+
+        GitClient.repos.forEach {
+            repositoryComboBox.addItem(it)
+        }
+
+        buttonPanel.add(repositoryComboBox)
         buttonPanel.add(addButton)
         buttonPanel.add(refreshButton)
 
@@ -71,6 +81,20 @@ object TabbedPanel {
                 "Issue" -> IssueSubmitDialog.show()
             }
         }
+
+        repositoryComboBox.addActionListener {
+            val packageName = MainPanelAdaptor::class.java.`package`.name
+            val reflections = Reflections(packageName)
+            val classes = reflections.getSubTypesOf(MainPanelAdaptor::class.java)
+
+            for (clazz in classes) {
+                val instance = clazz.kotlin.objectInstance
+                instance?.let {
+                    val method = clazz.getDeclaredMethod("refresh")
+                    method.invoke(it)
+                }
+            }
+        }
     }
 
     fun addTab(contentPanel: ContentPanel) {
@@ -79,5 +103,9 @@ object TabbedPanel {
 
     fun getPanel(): JPanel {
         return panel
+    }
+
+    fun getSelectedRepository(): String {
+        return repositoryComboBox.selectedItem as String
     }
 }

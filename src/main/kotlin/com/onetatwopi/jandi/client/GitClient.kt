@@ -164,14 +164,15 @@ object GitClient {
         }
 
         inputId = getLoginIdByResponse(response = response)
-        inputToken = userToken
-        setRepos()
 
         try {
-            LoginIdChangeNotifier.notifyLoginIdChanged(inputId)
+            LoginIdChangeNotifier.notifyLoginIdChanged(newLoginId = loginId, isUpdate = inputToken != null)
         } catch (e : Exception) {
             e.printStackTrace()
         }
+
+        inputToken = userToken
+        setRepos()
 
         try {
             writeToUserFile(userInfo = UserInfo(userId = loginId!!, userToken = userToken))

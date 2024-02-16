@@ -11,7 +11,7 @@ import com.onetatwopi.jandi.layout.panel.issue.IssuePanel
 import com.onetatwopi.jandi.layout.panel.pullRequest.PullRequestPanel
 import com.onetatwopi.jandi.listener.LoginIdChangeListener
 import com.onetatwopi.jandi.listener.LoginIdChangeNotifier
-import com.onetatwopi.jandi.login.LoginDialog
+import com.onetatwopi.jandi.login.LoginActivity
 import com.onetatwopi.jandi.project.ProjectRepository
 import java.awt.BorderLayout
 import javax.swing.JButton
@@ -26,27 +26,31 @@ class MainLayout : ToolWindowFactory, DumbAware, LoginIdChangeListener {
 
         LoginIdChangeNotifier.setListener(this)
 
-        processLoginIdChange(GitClient.loginId)
+        processLoginIdChange(GitClient.loginId, isUpdate = false)
     }
 
-    override fun onLoginIdChanged(loginId: String?) {
-        processLoginIdChange(loginId)
+    override fun onLoginIdChanged(loginId: String?, isUpdate : Boolean) {
+        processLoginIdChange(loginId, isUpdate = isUpdate)
     }
 
-    private fun processLoginIdChange(newLoginId: String?) {
+    private fun processLoginIdChange(newLoginId: String?, isUpdate: Boolean) {
 
         val contentManager = ProjectRepository.getMainToolWindow().contentManager
         contentManager.removeAllContents(true)
         if (newLoginId != null) {
             val tabbedPanel = TabbedPanel
             val pullRequestPanel = PullRequestPanel
-            pullRequestPanel.render()
-
             val issuePanel = IssuePanel
-            issuePanel.render()
-            tabbedPanel.addTab(pullRequestPanel)
-            tabbedPanel.addTab(issuePanel)
 
+            if(!isUpdate) {
+                pullRequestPanel.render()
+                issuePanel.render()
+                tabbedPanel.addTab(pullRequestPanel)
+                tabbedPanel.addTab(issuePanel)
+            } else {
+                pullRequestPanel.refresh()
+                issuePanel.refresh()
+            }
 
             val content = contentManager.factory.createContent(tabbedPanel.getPanel(), "", false)
             contentManager.addContent(content)
@@ -56,7 +60,7 @@ class MainLayout : ToolWindowFactory, DumbAware, LoginIdChangeListener {
             val loginButton = JButton("Login Github")
 
             loginButton.addActionListener {
-                LoginDialog(ProjectRepository.getProject()).show()
+                LoginActivity().run(ProjectRepository.getProject())
             }
 
             panel.add(loginButton, BorderLayout.NORTH)

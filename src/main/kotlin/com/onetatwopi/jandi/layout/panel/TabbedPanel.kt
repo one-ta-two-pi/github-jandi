@@ -2,12 +2,15 @@ package com.onetatwopi.jandi.layout.panel
 
 import IssueSubmitDialog
 import com.intellij.notification.NotificationType
+import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.notificationGroup
 import com.intellij.ui.components.JBTabbedPane
 import com.onetatwopi.jandi.client.GitClient
 import com.onetatwopi.jandi.layout.dialog.PullRequestSubmitDialog
 import com.onetatwopi.jandi.layout.panel.issue.IssuePanel
 import com.onetatwopi.jandi.layout.panel.pullRequest.PullRequestPanel
+import com.onetatwopi.jandi.login.LoginActivity
+import com.onetatwopi.jandi.login.LoginDialog
 import com.onetatwopi.jandi.project.ProjectRepository
 import java.awt.BorderLayout
 import javax.swing.JButton
@@ -22,12 +25,14 @@ object TabbedPanel {
     private val tabbedPane = JBTabbedPane()
     private val addButton = JButton("+")
     private val refreshButton = JButton("Refresh")
+    private val loginButton = JButton("Login")
     private val project = ProjectRepository.getProject()
 
     init {
         val buttonPanel = JPanel()
         buttonPanel.add(addButton)
         buttonPanel.add(refreshButton)
+        buttonPanel.add(loginButton)
 
         panel.add(buttonPanel, BorderLayout.NORTH)
         panel.add(tabbedPane, BorderLayout.CENTER)
@@ -70,6 +75,10 @@ object TabbedPanel {
                 "Pull Request" -> PullRequestSubmitDialog.show()
                 "Issue" -> IssueSubmitDialog.show()
             }
+        }
+
+        loginButton.addActionListener {
+            LoginActivity().run(project = project)
         }
     }
 

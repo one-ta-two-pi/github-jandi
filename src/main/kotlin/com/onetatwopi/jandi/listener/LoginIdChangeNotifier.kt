@@ -7,7 +7,7 @@ object LoginIdChangeNotifier {
         this.listener = listener
     }
 
-    fun notifyLoginIdChanged(newLoginId: String?) {
-        listener?.onLoginIdChanged(newLoginId)
+    fun notifyLoginIdChanged(newLoginId: String?, isUpdate: Boolean) {
+        listener?.onLoginIdChanged(newLoginId, isUpdate = isUpdate)
     }
 }

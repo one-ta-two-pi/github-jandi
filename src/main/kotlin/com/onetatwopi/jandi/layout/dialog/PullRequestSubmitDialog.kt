@@ -1,6 +1,8 @@
 package com.onetatwopi.jandi.layout.dialog
 
 import com.intellij.openapi.ui.ComboBox
+import com.onetatwopi.jandi.data.pullRequest.PullRequestService
+import com.onetatwopi.jandi.layout.dto.PullRequestSubmit
 import com.onetatwopi.jandi.project.ProjectRepository
 import java.awt.Component
 import java.awt.GridLayout
@@ -18,8 +20,6 @@ object PullRequestSubmitDialog {
     private val baseComboBox = ComboBox(ProjectRepository.getLocalBranchList())
     private val submitButton = JButton("Submit")
 
-    //private val pullRequestService = PullRequestService()
-
     init {
         dialog.title = "Pull Request"
         dialog.layout = GridLayout(6, 1)
@@ -32,15 +32,13 @@ object PullRequestSubmitDialog {
         dialog.add(submitButton)
 
         submitButton.addActionListener {
-            //ToDo: Pull Request Create
-//            pullRequestService.createPullRequest(
-//                PullRequestSubmit(
-//                    title = titleField.text,
-//                    body = bodyField.text,
-//                    head = headComboBox.selectedItem?.toString() ?: "",
-//                    base = baseComboBox.selectedItem?.toString() ?: ""
-//                )
-//            )
+            val pullRequestSubmit = PullRequestSubmit(
+                title = titleField.text,
+                body = bodyField.text,
+                head = headComboBox.selectedItem?.toString() ?: "",
+                base = baseComboBox.selectedItem?.toString() ?: ""
+            )
+            PullRequestService.instance.createPullRequest(pullRequestSubmit)
             close()
         }
 

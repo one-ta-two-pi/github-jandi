@@ -1,9 +1,14 @@
 package com.onetatwopi.jandi.client
 
 import com.google.gson.Gson
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.PathManager
+import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.notificationGroup
 import com.intellij.util.net.HTTPMethod
 import com.onetatwopi.jandi.listener.LoginIdChangeNotifier
+import com.onetatwopi.jandi.login.LoginActivity
+import com.onetatwopi.jandi.project.ProjectRepository
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import org.apache.http.HttpHeaders
@@ -89,7 +94,7 @@ object GitClient {
         }
     }
 
-    fun repoRequest(method : HTTPMethod, repo : String, category: Category, body : List<NameValuePair>, number : Int) : String {
+    fun repoRequest(method : HTTPMethod, repo : String, category: Category, body : List<Pair<String, Any>>, number : Int) : String {
         val reqUrl = "$repoUrl$loginId/$repo/${category.value}/$number"
         val request: HttpUriRequest = makeRepoRequest(url = reqUrl, method = method, body = body)
 
@@ -103,7 +108,7 @@ object GitClient {
         return getRepoResponse(request = request)
     }
 
-    fun repoRequest(method : HTTPMethod, repo : String, category: Category, body : List<NameValuePair>) : String {
+    fun repoRequest(method : HTTPMethod, repo : String, category: Category, body : List<Pair<String, Any>>) : String {
         val reqUrl = "$repoUrl$loginId/$repo/${category.value}"
         val request: HttpUriRequest = makeRepoRequest(url = reqUrl, method = method, body = body)
         return getRepoResponse(request = request)
@@ -120,14 +125,16 @@ object GitClient {
         val response = httpclient.execute(request)
 
         /* TODO : 권한 부족할 때 토큰 처리 */
-//        if(response.statusLine.statusCode == 404 || response.statusLine.statusCode == 403) {
-//
-//        }
+        if(response.statusLine.statusCode == 401 || response.statusLine.statusCode == 403) {
+            notificationGroup.createNotification("Not authorized", NotificationType.WARNING)
+            Messages.showMessageDialog("토큰에 권한이 없습니다! 다른 토큰을 사용하여 로그인 해주세요.", "Not authorized", Messages.getErrorIcon())
+        }
+
         return response.entity.content.reader(charset = Charset.defaultCharset())
             .readText()
     }
 
-    private fun makeRepoRequest(method: HTTPMethod, url: String, body: List<NameValuePair>): HttpUriRequest {
+    private fun makeRepoRequest(method: HTTPMethod, url: String, body: List<Pair<String, Any>>): HttpUriRequest {
         return when(method) {
             HTTPMethod.GET -> RequestBuilder.get(url)
             HTTPMethod.PUT -> RequestBuilder.put(url)
@@ -138,7 +145,7 @@ object GitClient {
             addHeader(HttpHeaders.ACCEPT, "application/vnd.github+json")
             addHeader(HttpHeaders.AUTHORIZATION, "Bearer $userToken")
             addHeader("X-GitHub-Api-Version", apiVersion)
-            entity = StringEntity(gson.toJson(body.associate { it.name to it.value }), ContentType.APPLICATION_JSON)
+            entity = StringEntity(gson.toJson(body.toMap()), ContentType.APPLICATION_JSON)
         }.build()
     }
 

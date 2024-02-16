@@ -48,7 +48,7 @@ class IssueButtons : ListCellRenderer<IssueInfo> {
         cellHasFocus: Boolean,
     ): Component {
         value?.let {
-            titleLabel.text = it.title
+            titleLabel.text = it.titleWithNumber
             openUserIdLabel.text = it.createUserId
             openAtLabel.text = it.openAtAsString
             statusLabel.text = it.upperStatus

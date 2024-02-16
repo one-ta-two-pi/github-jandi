@@ -1,6 +1,6 @@
 package com.onetatwopi.jandi.layout.panel
 
-import IssueSubmitDialog
+import com.onetatwopi.jandi.layout.dialog.IssueSubmitDialog
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.notificationGroup
 import com.intellij.ui.components.JBTabbedPane

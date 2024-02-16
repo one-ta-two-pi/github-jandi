@@ -13,6 +13,7 @@ data class IssueInfo(
     val createUserId: String,
     @SerializedName("html_url") val url: String,
     @SerializedName("state") val status: String,
+    val number: Int,
     @SerializedName("created_at") val openAt: String,
     @SerializedName("closed_at") val closeAt: String,
 ) {
@@ -34,4 +35,7 @@ data class IssueInfo(
 
     val upperStatus: String
         get() = status.uppercase()
+
+    val titleWithNumber: String
+        get() = "$title #$number"
 }

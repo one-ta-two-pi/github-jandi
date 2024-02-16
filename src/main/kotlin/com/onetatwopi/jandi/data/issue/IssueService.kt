@@ -10,16 +10,21 @@ import com.onetatwopi.jandi.layout.dto.IssueInfo
 import com.onetatwopi.jandi.layout.dto.IssueSubmit
 import org.apache.http.message.BasicNameValuePair
 
-object IssueService {
+class IssueService private constructor() {
 
-    private const val MAX_ISSUES = 10
+    companion object {
+        private const val MAX_ISSUES = 10
+
+        val instance: IssueService by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+            IssueService()
+        }
+    }
 
     init {
         parseIssueList()
     }
 
     private fun getRepositoryIssues(): String {
-        println("GitClient.repos[0] = ${GitClient.repos[0]}")
         return GitClient.repoRequest(
             method = HTTPMethod.GET,
             repo = GitClient.repos[0],

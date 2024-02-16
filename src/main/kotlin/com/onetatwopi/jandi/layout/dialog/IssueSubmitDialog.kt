@@ -32,7 +32,7 @@ object IssueSubmitDialog {
         dialog.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
 
         submitButton.addActionListener {
-            IssueService.createIssue(IssueSubmit(title = titleField.text, body = bodyField.text))
+            IssueService.instance.createIssue(IssueSubmit(title = titleField.text, body = bodyField.text))
             close()
             IssuePanel.refresh()
         }

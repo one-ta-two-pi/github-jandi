@@ -46,6 +46,6 @@ object IssuePanel : MainPanelAdaptor<IssueInfo>, ContentPanel("Issue") {
     }
 
     override fun refresh() {
-        setIssueInfoList(IssueService.parseIssueList())
+        setIssueInfoList(IssueService.instance.parseIssueList())
     }
 }

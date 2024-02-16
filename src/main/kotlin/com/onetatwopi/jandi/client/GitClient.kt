@@ -28,8 +28,8 @@ object GitClient {
     private val userToken: String? get() = inputToken
     private var inputId: String? = null
     private var inputToken: String? = null
-    val repos: ImmutableList<String>? get() = inputRepos
-    private var inputRepos: ImmutableList<String>? = null
+    val repos: ImmutableList<String> get() = inputRepos
+    private lateinit var inputRepos: ImmutableList<String>
     private val gson = Gson()
 
     private const val timeout = 2000
@@ -168,8 +168,13 @@ object GitClient {
         setRepos()
 
         try {
-            writeToUserFile(userInfo = UserInfo(userId = loginId!!, userToken = userToken))
             LoginIdChangeNotifier.notifyLoginIdChanged(inputId)
+        } catch (e : Exception) {
+            e.printStackTrace()
+        }
+
+        try {
+            writeToUserFile(userInfo = UserInfo(userId = loginId!!, userToken = userToken))
         } catch (e: Exception) {
             e.printStackTrace()
             throw cannotWriteFileException()

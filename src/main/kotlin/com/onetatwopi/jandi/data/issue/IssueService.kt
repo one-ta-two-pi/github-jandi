@@ -1,16 +1,14 @@
 package com.onetatwopi.jandi.data.issue
 
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.intellij.util.net.HTTPMethod
 import com.onetatwopi.jandi.client.Category
 import com.onetatwopi.jandi.client.GitClient
+import com.onetatwopi.jandi.layout.dto.IssueDetailInfo
 import com.onetatwopi.jandi.layout.dto.IssueInfo
 import com.onetatwopi.jandi.layout.dto.IssueSubmit
-import com.onetatwopi.jandi.layout.panel.issue.IssuePanel
 import org.apache.http.message.BasicNameValuePair
-import javax.swing.SwingUtilities
 
 object IssueService {
 
@@ -20,13 +18,20 @@ object IssueService {
         parseIssueList()
     }
 
-    private fun getResponse(): String = GitClient.repoRequest(
+    private fun getRepositoryIssues(): String = GitClient.repoRequest(
         method = HTTPMethod.GET,
         repo = "hanghae99",
         category = Category.ISSUE,
     )
 
-    private fun postResponse(issueSubmit: IssueSubmit): String = GitClient.repoRequest(
+    private fun getRepositoryIssueDetail(number: Int): String = GitClient.repoRequest(
+        method = HTTPMethod.GET,
+        repo = "hanghae99",
+        category = Category.ISSUE,
+        number = number
+    )
+
+    private fun createRepositoryIssue(issueSubmit: IssueSubmit): String = GitClient.repoRequest(
         method = HTTPMethod.POST,
         repo = "hanghae99",
         category = Category.ISSUE,
@@ -39,7 +44,7 @@ object IssueService {
     )
 
     fun parseIssueList(): MutableList<IssueInfo> {
-        val response = getResponse()
+        val response = getRepositoryIssues()
         val listType = object : TypeToken<List<IssueInfo>>() {}.type
         val jsonIssues: List<IssueInfo> = Gson().fromJson(response, listType)
 
@@ -51,6 +56,11 @@ object IssueService {
     }
 
     fun createIssue(issueSubmit: IssueSubmit) {
-        postResponse(issueSubmit)
+        createRepositoryIssue(issueSubmit)
+    }
+
+    fun getIssueDetail(number: Int): IssueDetailInfo {
+        val response = getRepositoryIssueDetail(number)
+        return Gson().fromJson(response, IssueDetailInfo::class.java)
     }
 }

@@ -1,16 +1,24 @@
 package com.onetatwopi.jandi.layout.dto
 
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import java.lang.reflect.Type
 import java.time.LocalDateTime
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-data class IssueInfo(
+data class IssueDetailInfo(
     val title: String,
+    val body: String,
+    val number: Integer,
     @SerializedName("user")
     @JsonAdapter(UsernameDeserializer::class)
     val createUserId: String,
+    @SerializedName("closed_by")
+    @JsonAdapter(UsernameDeserializer::class)
+    val closedUserId: String,
     @SerializedName("html_url") val url: String,
     @SerializedName("state") val status: String,
     @SerializedName("created_at") val openAt: String,
@@ -18,20 +26,7 @@ data class IssueInfo(
 ) {
     val openAtAsDate: LocalDateTime
         get() {
-            if (openAt == null) {
-                return LocalDateTime.of(2000, 1, 1, 0, 0, 0)
-            }
-
             val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
             return LocalDateTime.parse(openAt, formatter)
         }
-
-    val openAtAsString: String
-        get() {
-            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-            return openAtAsDate.format(formatter)
-        }
-
-    val upperStatus: String
-        get() = status.uppercase()
 }

@@ -18,22 +18,25 @@ object IssueService {
         parseIssueList()
     }
 
-    private fun getRepositoryIssues(): String = GitClient.repoRequest(
-        method = HTTPMethod.GET,
-        repo = "hanghae99",
-        category = Category.ISSUE,
-    )
+    private fun getRepositoryIssues(): String {
+        println("GitClient.repos[0] = ${GitClient.repos[0]}")
+        return GitClient.repoRequest(
+            method = HTTPMethod.GET,
+            repo = GitClient.repos[0],
+            category = Category.ISSUE,
+        )
+    }
 
     private fun getRepositoryIssueDetail(number: Int): String = GitClient.repoRequest(
         method = HTTPMethod.GET,
-        repo = "hanghae99",
+        repo = GitClient.repos[0],
         category = Category.ISSUE,
         number = number
     )
 
     private fun createRepositoryIssue(issueSubmit: IssueSubmit): String = GitClient.repoRequest(
         method = HTTPMethod.POST,
-        repo = "hanghae99",
+        repo = GitClient.repos[0],
         category = Category.ISSUE,
         body = listOf(
             BasicNameValuePair("title", issueSubmit.title),

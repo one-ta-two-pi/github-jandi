@@ -169,16 +169,14 @@ object GitClient {
 
     fun login(userToken: String) {
         inputId = requestGitLogin(userToken = userToken)
+        inputToken = userToken
+        setRepos()
 
         try {
             LoginIdChangeNotifier.notifyLoginIdChanged(newLoginId = loginId, isUpdate = inputToken != null)
         } catch (e : Exception) {
             e.printStackTrace()
         }
-
-        inputToken = userToken
-        setRepos()
-
         try {
             writeToUserFile(userToken = userToken)
         } catch (e: Exception) {

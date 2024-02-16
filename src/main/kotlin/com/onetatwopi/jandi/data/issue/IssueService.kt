@@ -1,7 +1,10 @@
 package com.onetatwopi.jandi.data.issue
 
 import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
+import com.intellij.openapi.ui.Messages
 import com.intellij.util.net.HTTPMethod
 import com.onetatwopi.jandi.client.Category
 import com.onetatwopi.jandi.client.GitClient
@@ -40,17 +43,45 @@ class IssueService private constructor() {
         number = number
     )
 
-    private fun createRepositoryIssue(issueSubmit: IssueSubmit): String = GitClient.repoRequest(
-        method = HTTPMethod.POST,
-        repo = TabbedPanel.getSelectedRepository(),
-        category = Category.ISSUE,
-        body = listOf(
-            BasicNameValuePair("title", issueSubmit.title),
-            BasicNameValuePair("body", issueSubmit.body),
+    private fun createRepositoryIssue(issueSubmit: IssueSubmit): String {
+        val (title, body, milestone) = issueSubmit
+
+        val requestBody = mutableListOf(
+            BasicNameValuePair("title", title),
+            BasicNameValuePair("body", body),
         )
 
-        // TODO: assignee, milestone, labels, assignees 미구현
-    )
+        if (milestone.isNotBlank()) {
+            requestBody.add(BasicNameValuePair("milestone", milestone))
+        }
+
+        val response = GitClient.repoRequest(
+            method = HTTPMethod.POST,
+            repo = TabbedPanel.getSelectedRepository(),
+            category = Category.ISSUE,
+            body = requestBody
+            // TODO: assignee, milestone, labels, assignees 미구현
+        )
+
+        checkResponseError(response)
+
+        return response
+    }
+
+    private fun checkResponseError(response: String) {
+        val jsonResponse = JsonParser.parseString(response).asJsonObject
+        if (jsonResponse.has("errors")) {
+            val errors: JsonArray = jsonResponse.getAsJsonArray("errors")
+            for (errorElement in errors) {
+                val error = errorElement.asJsonObject
+                val field = error.get("field").asString
+                if (field == "milestone") {
+                    Messages.showMessageDialog("Milestone 정보가 올바르지 않습니다.", "Error", Messages.getErrorIcon())
+                    throw RuntimeException("Milestone 정보가 올바르지 않습니다.")
+                }
+            }
+        }
+    }
 
     fun parseIssueList(): MutableList<IssueInfo> {
         val response = getRepositoryIssues()

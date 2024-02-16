@@ -49,62 +49,6 @@ object PullRequestPanel : MainPanelAdaptor<PullRequestInfo>, ContentPanel("Pull 
     }
 
     override fun refresh() {
-        if (pullRequestInfoList.isEmpty()) {
-            setPullRequestInfoList(
-                listOf(
-                    PullRequestInfo(
-                        "Pull Request 1",
-                        "User1",
-                        "Open",
-                        "https://www.naver.com",
-                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        PullRequestDetailInfo(
-                            number = 1,
-                            title = "detail1",
-                            requestUserId = "id1",
-                            status = "Open",
-                            url = "https://www.naver.com",
-                            body = "body1",
-                            createdAt = "2024-02-15"
-                        )
-                    ),
-                    PullRequestInfo(
-                        "Pull Request 2",
-                        "User2",
-                        "Closed",
-                        "https://www.duam.net",
-                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        PullRequestDetailInfo(
-                            number = 2,
-                            title = "detail2",
-                            requestUserId = "id2",
-                            status = "Closed",
-                            url = "https://www.naver.com",
-                            body = "body2",
-                            createdAt = "2024-02-15"
-                        )
-                    ),
-                    PullRequestInfo(
-                        "Pull Request 3",
-                        "User3",
-                        "In Progress",
-                        "https://www.google.com",
-                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        PullRequestDetailInfo(
-                            number = 3,
-                            title = "detail3",
-                            requestUserId = "id3",
-                            status = "In Progress",
-                            url = "https://www.naver.com",
-                            body = "body3",
-                            createdAt = "2024-02-15"
-                        )
-                    )
-                )
-            )
-        } else {
-            setPullRequestInfoList(PullRequestService.instance.parsePullRequestList())
-        }
         setPullRequestInfoList(PullRequestService.instance.parsePullRequestList())
     }
 }

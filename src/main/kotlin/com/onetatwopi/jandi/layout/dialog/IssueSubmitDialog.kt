@@ -1,4 +1,7 @@
 import com.onetatwopi.jandi.data.issue.IssueService
+import com.onetatwopi.jandi.layout.dto.IssueSubmit
+import com.onetatwopi.jandi.layout.panel.issue.IssueButtons
+import com.onetatwopi.jandi.layout.panel.issue.IssuePanel
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.GridLayout
@@ -11,8 +14,6 @@ object IssueSubmitDialog {
     private val bodyLabel = generateLabel("Detail")
     private val bodyField = JTextArea(2, 20)
     private val submitButton = JButton("Submit")
-
-    private val issueService = IssueService()
 
     private const val WIDTH = 600
     private const val HEIGHT = 400
@@ -31,15 +32,9 @@ object IssueSubmitDialog {
         dialog.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
 
         submitButton.addActionListener {
-//            ToDo: IssueService 연동
-//            issueService.createIssue(
-//                IssueSubmit(
-//                    title = titleField.text,
-//                    body=bodyField.text
-//                )
-//            )
-
+            IssueService.createIssue(IssueSubmit(title = titleField.text, body = bodyField.text))
             close()
+            IssuePanel.refresh()
         }
     }
 

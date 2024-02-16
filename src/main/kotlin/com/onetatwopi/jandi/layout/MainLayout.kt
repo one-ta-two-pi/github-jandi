@@ -1,9 +1,7 @@
 package com.onetatwopi.jandi.layout
 
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.notificationGroup
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowAnchor
 import com.intellij.openapi.wm.ToolWindowFactory
@@ -13,7 +11,11 @@ import com.onetatwopi.jandi.layout.panel.issue.IssuePanel
 import com.onetatwopi.jandi.layout.panel.pullRequest.PullRequestPanel
 import com.onetatwopi.jandi.listener.LoginIdChangeListener
 import com.onetatwopi.jandi.listener.LoginIdChangeNotifier
+import com.onetatwopi.jandi.login.LoginDialog
 import com.onetatwopi.jandi.project.ProjectRepository
+import java.awt.BorderLayout
+import javax.swing.JButton
+import javax.swing.JPanel
 
 class MainLayout : ToolWindowFactory, DumbAware, LoginIdChangeListener {
 
@@ -49,7 +51,18 @@ class MainLayout : ToolWindowFactory, DumbAware, LoginIdChangeListener {
             val content = contentManager.factory.createContent(tabbedPanel.getPanel(), "", false)
             contentManager.addContent(content)
         } else {
-            notificationGroup.createNotification("No github tokens!", NotificationType.WARNING)
+            val panel = JPanel()
+            panel.layout = BorderLayout()
+            val loginButton = JButton("Login Github")
+
+            loginButton.addActionListener {
+                LoginDialog(ProjectRepository.getProject()).show()
+            }
+
+            panel.add(loginButton, BorderLayout.NORTH)
+
+            val content = contentManager.factory.createContent(panel, "", false)
+            contentManager.addContent(content)
         }
     }
 }

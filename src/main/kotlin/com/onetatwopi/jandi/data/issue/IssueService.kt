@@ -8,6 +8,7 @@ import com.onetatwopi.jandi.client.GitClient
 import com.onetatwopi.jandi.layout.dto.IssueDetailInfo
 import com.onetatwopi.jandi.layout.dto.IssueInfo
 import com.onetatwopi.jandi.layout.dto.IssueSubmit
+import com.onetatwopi.jandi.layout.panel.TabbedPanel
 import org.apache.http.message.BasicNameValuePair
 
 class IssueService private constructor() {
@@ -27,21 +28,21 @@ class IssueService private constructor() {
     private fun getRepositoryIssues(): String {
         return GitClient.repoRequest(
             method = HTTPMethod.GET,
-            repo = GitClient.repos[0],
+            repo = TabbedPanel.getSelectedRepository(),
             category = Category.ISSUE,
         )
     }
 
     private fun getRepositoryIssueDetail(number: Int): String = GitClient.repoRequest(
         method = HTTPMethod.GET,
-        repo = GitClient.repos[0],
+        repo = TabbedPanel.getSelectedRepository(),
         category = Category.ISSUE,
         number = number
     )
 
     private fun createRepositoryIssue(issueSubmit: IssueSubmit): String = GitClient.repoRequest(
         method = HTTPMethod.POST,
-        repo = GitClient.repos[0],
+        repo = TabbedPanel.getSelectedRepository(),
         category = Category.ISSUE,
         body = listOf(
             BasicNameValuePair("title", issueSubmit.title),

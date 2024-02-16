@@ -157,4 +157,8 @@ object IssueSubmitDialog {
             dialog.isVisible = false
         }
     }
+
+    fun isShowing(): Boolean {
+        return this.dialog.isShowing
+    }
 }

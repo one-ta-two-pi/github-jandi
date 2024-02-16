@@ -75,9 +75,12 @@ object TabbedPanel {
 
                 return@addActionListener
             }
-            when (tabbedPane.getTitleAt(tabbedPane.selectedIndex)) {
-                "Pull Request" -> PullRequestSubmitDialog.show()
-                "Issue" -> IssueSubmitDialog.show()
+
+            if(!PullRequestSubmitDialog.isShowing() && !IssueSubmitDialog.isShowing()){
+                when (tabbedPane.getTitleAt(tabbedPane.selectedIndex)) {
+                    "Pull Request" -> PullRequestSubmitDialog.show()
+                    "Issue" -> IssueSubmitDialog.show()
+                }
             }
         }
 
